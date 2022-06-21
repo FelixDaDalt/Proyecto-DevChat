@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <h2>Sala de Chat</h2>
+        <ul class="list-group">
+            @*Aca traigo la lista de chats grupales y la muestro*@
+            @*@foreach(var e in Proyecto_DevChat.Controllers.PrivChatController.Rooms)
+            {
+                <li class="list-group-item"><a href="~/chat/Room?room=@e.key">@e.Value</a></li>
+            }*@
+        </ul>
+    </div>
+</div>
+
