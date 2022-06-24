@@ -30,7 +30,7 @@ namespace Proyecto_DevChat.Controllers
             return View(roomChatList);
         }
 
-        public IActionResult Room(int room, int category, string? senderId, string? receiverId)
+        public IActionResult Room(int room, int category, string senderId, string receiverName)
         {
             //Aca le pido a la api el historial de mensajes de la sala
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -51,7 +51,23 @@ namespace Proyecto_DevChat.Controllers
                         );
                 }
             }
-            if(category == 2) { }
+            if(category == 2) {
+                //buscar el id por el nombre receiverName
+                string url = "https://localhost:7211/api/RoomChats/priv?idSender=" + senderId
+                    + "&receiverName=" + receiverName;
+                HttpClient client = new HttpClient();
+                var response = client.GetAsync(url).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    roomChat = JsonSerializer.Deserialize<RoomResponse>(content,
+                        new JsonSerializerOptions()
+                        {
+                            PropertyNameCaseInsensitive = true
+                        }
+                        );
+                }
+            }
             return View("Room",roomChat);
         }
     }

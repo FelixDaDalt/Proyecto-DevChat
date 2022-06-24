@@ -1,6 +1,7 @@
-﻿@model RoomResponse
+﻿@using System.Security.Claims
+@model RoomResponse
 
-<h1>@Model</h1>
+<h1>@Model.Name</h1>
 
 <div class="row">
     <div class="col-12">
@@ -26,14 +27,16 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 connection.start().then(() => {
-    connection.invoke("AddToGroup", "@Model")
+    connection.invoke("AddToGroup", "@Model.Name")
 });
 document.getElementById("btnSend").addEventListener("click", (event) => {
-    let room = "@Model";
+    let room = "@Model.Name";
+    let roomId = @Model.Id;
     let user = "@User.Identity.Name";
     let message = document.getElementById("message").value;
+    let userId = "@User.FindFirstValue(ClaimTypes.NameIdentifier)";
 
-    connection.invoke("SendMessage", room, user, message)
+    connection.invoke("SendMessage", room, roomId, user, message,userId)
 
     document.getElementById("message").value = "";
     document.getElementById("message").focus();
@@ -45,5 +48,11 @@ connection.on("RecieveMessage", (user, message) => {
     var message = "<div><b>" + user + " dijo:</b> " + message + "</div>";
     document.getElementById("messages").innerHTML =
         message + document.getElementById("messages").innerHTML;
+});
+
+connection.on("Bienvenido", (message) => {
+    var message = "<div><b>" + message + "</b></div>";
+    document.getElementById("notifications").innerHTML =
+        message + document.getElementById("notifications").innerHTML;
 });
 </script>
