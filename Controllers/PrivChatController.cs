@@ -34,20 +34,22 @@ namespace Proyecto_DevChat.Controllers
         {
             //Aca le pido a la api el historial de mensajes de la sala
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (category == 1) { }            
-            string url = "https://localhost:7211/api/RoomChats/group/" + room;
-            HttpClient client = new HttpClient();
-            var response = client.GetAsync(url).Result;
-            RoomResponse roomChat = new RoomResponse();
-            if (response.IsSuccessStatusCode)
+            if (category == 1)
             {
-                var content = response.Content.ReadAsStringAsync().Result;
-                roomChat = JsonSerializer.Deserialize<RoomResponse>(content,
-                    new JsonSerializerOptions()
-                    {
-                        PropertyNameCaseInsensitive = true
-                    }
-                    );
+                string url = "https://localhost:7211/api/RoomChats/group/" + room;
+                HttpClient client = new HttpClient();
+                var response = client.GetAsync(url).Result;
+                RoomResponse roomChat = new RoomResponse();
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    roomChat = JsonSerializer.Deserialize<RoomResponse>(content,
+                        new JsonSerializerOptions()
+                        {
+                            PropertyNameCaseInsensitive = true
+                        }
+                        );
+                }
             }
             return View("Room",roomChat);
         }
