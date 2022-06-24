@@ -6,6 +6,7 @@ namespace Proyecto_DevChat.Chats
     {
         public async Task SendMessage(string room, string user, string message)
         {
+            //aca tengo que mandar el msj a la api para que lo guarde
             await Clients.Group(room).SendAsync("RecieveMessage",user, message);
         }
 

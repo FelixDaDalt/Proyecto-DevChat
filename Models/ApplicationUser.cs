@@ -8,6 +8,7 @@ namespace Proyecto_DevChat.Models
         {
             Contacts = new HashSet<Contact>();
         }
-        public virtual ICollection<Contact> Contacts { get; set; }
+
+        public virtual ICollection<Contact>? Contacts { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Proyecto_DevChat.Data;
 using Proyecto_DevChat.Models;
+using Proyecto_DevChat.Services;
 using System.Diagnostics;
 
 namespace Proyecto_DevChat.Controllers
@@ -10,11 +12,13 @@ namespace Proyecto_DevChat.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> userm;
+        private readonly ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger,UserManager<IdentityUser> userManager)
+        public HomeController(ILogger<HomeController> logger,UserManager<IdentityUser> userManager, ApplicationDbContext db)
         {
             _logger = logger;
             userm = userManager;
+            _db = db;
         }
 
         public IActionResult Index()
@@ -26,6 +30,16 @@ namespace Proyecto_DevChat.Controllers
         [Authorize]
         public IActionResult Privacy()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                //ContactoService c = new ContactoService(_db);
+                //var userId = userm.GetUserId(HttpContext.User);
+                //var contactId = "bea76ac7-46f5-4812-83ca-7644177e9ea1";
+                //c.AddContact(userId, contactId);
+                var u = userm.GetUserAsync(HttpContext.User).Result;
+                var x = _db.Us.OfType<Contact>().ToList();
+                
+            }
             return View();
         }
 
