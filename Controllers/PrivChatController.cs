@@ -30,7 +30,7 @@ namespace Proyecto_DevChat.Controllers
             return View(roomChatList);
         }
 
-        public IActionResult Room(int room, int category)
+        public IActionResult Room(int room, int category, string? senderId, string? receiverId)
         {
             //Aca le pido a la api el historial de mensajes de la sala
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -51,6 +51,7 @@ namespace Proyecto_DevChat.Controllers
                         );
                 }
             }
+            if(category == 2) { }
             return View("Room",roomChat);
         }
     }
