@@ -34,12 +34,12 @@ namespace Proyecto_DevChat.Controllers
         {
             //Aca le pido a la api el historial de mensajes de la sala
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            RoomResponse roomChat = new RoomResponse();
             if (category == 1)
             {
                 string url = "https://localhost:7211/api/RoomChats/group/" + room;
                 HttpClient client = new HttpClient();
-                var response = client.GetAsync(url).Result;
-                RoomResponse roomChat = new RoomResponse();
+                var response = client.GetAsync(url).Result;                
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
