@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Proyecto_DevChat.Models;
 using System.Security.Claims;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 
 namespace Proyecto_DevChat.Controllers
 {
     public class PrivChatController : Controller
     {
-        [Authorize]
-        public ActionResult<List<RoomResponse>> Index()
+        
+        public List<RoomResponse> GetRoomsAsync()
         {
-            //Traer la lista de chats grupales
             List<RoomResponse> roomChatList = null;
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             string url = "https://localhost:7211/api/RoomChats/" + claim;
@@ -25,18 +25,46 @@ namespace Proyecto_DevChat.Controllers
                     {
                         PropertyNameCaseInsensitive = true
                     }
-                    ); 
+                    );
             }
+            return roomChatList;
+        }
+
+        [Authorize]
+        public ActionResult<List<RoomResponse>> Index()
+        {
+            List<RoomResponse> roomChatList = new List<RoomResponse>();
+            roomChatList= GetRoomsAsync();
+            //Traer la lista de chats grupales
+            /*List<RoomResponse> roomChatList = null;
+            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string url = "https://localhost:7211/api/RoomChats/" + claim;
+            HttpClient client = new HttpClient();
+            var response = client.GetAsync(url).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                roomChatList = JsonSerializer.Deserialize<List<RoomResponse>>(content,
+                    new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }
+                    ); 
+            }*/
+            ViewData["ChatList"] = roomChatList;
             return View(roomChatList);
         }
 
-        public IActionResult Room(int room, int category, string? senderId, string? receiverId)
+        public IActionResult Room(int room, int category, string? senderId, string? receiverName)
         {
+            
+            
+            ViewData["ChatList"] = GetRoomsAsync();
             //Aca le pido a la api el historial de mensajes de la sala
             var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             RoomResponse roomChat = new RoomResponse();
-            if (category == 1)
-            {
+            //if (category == 1)
+            //{
                 string url = "https://localhost:7211/api/RoomChats/group/" + room;
                 HttpClient client = new HttpClient();
                 var response = client.GetAsync(url).Result;                
@@ -50,8 +78,25 @@ namespace Proyecto_DevChat.Controllers
                         }
                         );
                 }
-            }
-            if(category == 2) { }
+            //}
+            //if (category == 2)
+            //{
+            //    string url = "https://localhost:7211/api/RoomChats/priv?idSender=" + senderId
+            //        + "&receiverName=" + receiverName;
+            //    HttpClient client = new HttpClient();
+            //    var response = client.GetAsync(url).Result;
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var content = response.Content.ReadAsStringAsync().Result;
+            //        roomChat = JsonSerializer.Deserialize<RoomResponse>(content,
+            //            new JsonSerializerOptions()
+            //            {
+            //                PropertyNameCaseInsensitive = true
+            //            }
+            //            );
+            //    }
+            //} 
+            ViewData["MessageList"] = roomChat.Messages;
             return View("Room",roomChat);
         }
     }

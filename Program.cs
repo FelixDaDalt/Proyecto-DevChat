@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Proyecto_DevChat.Chats;
+using Proyecto_DevChat.Controllers;
 using Proyecto_DevChat.Data;
 using Proyecto_DevChat.Models;
 
@@ -28,6 +29,7 @@ services.AddAuthentication().AddFacebook(facebookOptions =>
 });
 
 // Add services to the container.
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

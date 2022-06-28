@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Proyecto_DevChat.Data;
 
@@ -11,9 +12,10 @@ using Proyecto_DevChat.Data;
 namespace Proyecto_DevChat.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220624152640_migracion1")]
+    partial class migracion1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,9 +242,6 @@ namespace Proyecto_DevChat.Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsersId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("contactUser")
@@ -251,7 +250,7 @@ namespace Proyecto_DevChat.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Contacts");
                 });
@@ -318,7 +317,9 @@ namespace Proyecto_DevChat.Data.Migrations
                 {
                     b.HasOne("Proyecto_DevChat.Models.ApplicationUser", "Users")
                         .WithMany("Contacts")
-                        .HasForeignKey("UsersId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Users");
                 });
